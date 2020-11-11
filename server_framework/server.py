@@ -6,9 +6,9 @@ import socket
 
 import uvloop
 
-from server_framework.answer_codes import HTTP_OK
+from server_framework.answer_codes import HTTP_INTERNAL_SERVER_ERROR
 from server_framework.logger import log
-from server_framework.parser import parse, Response, Request, ENCODING
+from server_framework.parser import parse, ENCODING, get_error
 from server_framework.router import Router
 
 
@@ -20,6 +20,8 @@ class MainServer:
         self.port = port
         self.workers_count = workers_count
         self.router = router
+        self.worker = Worker(router)  # this need to bind worker to process
+        self.worker.router.routes = router.routes
 
         atexit.register(self.kill_children)
 
@@ -46,7 +48,7 @@ class MainServer:
             log.print.info('Server was manually stopped')
 
     def prefork(self, parent_sock: socket.socket):
-        p = mp.Process(target=worker, args=(parent_sock,))
+        p = mp.Process(target=self.worker.worker, args=(parent_sock,))
         p.start()
         self.childrens_pull.append(p)
 
@@ -56,29 +58,30 @@ class MainServer:
             c.join()
 
 
-def worker(parent_sock: socket.socket):
-    asyncio.run(__worker(parent_sock))
+class Worker:
+    def __init__(self, router: Router):
+        self.router = router
+        print(self.router)
 
+    def worker(self, parent_sock: socket.socket):
+        asyncio.run(self.__worker(parent_sock))
 
-async def __worker(parent_sock: socket.socket):
-    while True:
-        child_sock, _ = await asyncio.get_event_loop().sock_accept(parent_sock)
-        await handle(child_sock)
-        child_sock.close()
+    async def __worker(self, parent_sock: socket.socket):
+        while True:
+            child_sock, _ = await asyncio.get_event_loop().sock_accept(parent_sock)
+            await self.handle(child_sock)
+            child_sock.close()
 
-
-async def handle(sock: socket.socket):
-    raw = await asyncio.get_event_loop().sock_recv(sock, 1024)
-    request = parse(raw)
-    if request is None:
-        log.print.info('Served empty request')
-        return
-
-    log.print.info(request)
-    handler_response = await test_handler(request)
-    resp = handler_response.get_answer()
-    await asyncio.get_event_loop().sock_sendall(sock, resp.encode(ENCODING))
-
-
-async def test_handler(req: Request) -> Response:
-    return Response(status=HTTP_OK, data="""{"kek":2}""")
+    async def handle(self, sock: socket.socket):
+        raw = await asyncio.get_event_loop().sock_recv(sock, 1024)
+        request = parse(raw)
+        if request is None:
+            log.print.info('Served empty request')
+            return
+        log.print.info(request)
+        try:
+            result = await self.router.navigate(request)
+            resp = result.get_answer()
+        except Exception as e:
+            resp = get_error(HTTP_INTERNAL_SERVER_ERROR, str(e))
+        await asyncio.get_event_loop().sock_sendall(sock, resp.encode(ENCODING))

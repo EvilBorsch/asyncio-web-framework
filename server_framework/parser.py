@@ -55,12 +55,26 @@ class Response:
         return self.get_json_answer()
 
     def get_json_answer(self) -> str:
-        tmp = f"""HTTP/1.1 {self.status.code} {self.status.status}
+        ans = f"""HTTP/1.1 {self.status.code} {self.status.status}
                 Content-Length: {len(self.data) - 1}
                 Connection: close
                 Content-Type: application/json
 
                 {self.data}
                 """
-        tmp += '\r\n'
-        return tmp
+        ans += '\r\n'
+        return ans
+
+
+def get_error(status_code: Http_code, message: str):
+    data = "{\nError: " + message + "\n}"
+    ans = f"""HTTP/1.1 {status_code.code} {status_code.status}
+                    Content-Length: {len(message) - 1}
+                    Connection: close
+                    Content-Type: application/json
+
+                    
+                    {data}
+                    """
+    ans += '\r\n'
+    return ans

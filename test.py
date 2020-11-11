@@ -10,6 +10,6 @@ async def test_handler(req: Request) -> Response:
 
 if __name__ == '__main__':
     router = Router()
-    router.add_route("/path", test_handler)
+    router.add_route("/path", test_handler, methods=["GET"])
     s = MainServer(host="0.0.0.0", port=8081, router=router)
     s.run()
