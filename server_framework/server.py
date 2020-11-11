@@ -12,13 +12,14 @@ from server_framework.parser import parse, ENCODING, get_error
 from server_framework.router import Router
 
 
-class MainServer:
+class HTTPServer:
     def __init__(self, host: str, port: int, router: Router, workers_count=os.cpu_count()):
         self.childrens_pull = []
         self.sock = None
         self.host = host
         self.port = port
         self.workers_count = workers_count
+
         self.router = router
         self.worker = Worker(router)  # this need to bind worker to process
         self.worker.router.routes = router.routes
@@ -61,7 +62,6 @@ class MainServer:
 class Worker:
     def __init__(self, router: Router):
         self.router = router
-        print(self.router)
 
     def worker(self, parent_sock: socket.socket):
         asyncio.run(self.__worker(parent_sock))
