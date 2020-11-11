@@ -79,7 +79,7 @@ class Response:
                 Connection: close
                 Content-Type: application/json
 
-                {self.data}
+{self.data}
                 """
         ans += '\r\n'
         return ans
@@ -92,7 +92,7 @@ def get_error(status_code: Http_code, message: str):
             Connection: close
             Content-Type: application/json
 
-            {data}
+{data}
             """
     ans += '\r\n'
     return ans

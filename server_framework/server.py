@@ -24,9 +24,10 @@ class HTTPServer:
         self.worker = Worker(router)  # this need to bind worker to process
         self.worker.router.routes = router.routes
 
-        atexit.register(self.kill_children)
+        atexit.register(self.destroy)
 
     def run(self):
+
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock.bind((self.host, self.port))
@@ -53,7 +54,7 @@ class HTTPServer:
         p.start()
         self.childrens_pull.append(p)
 
-    def kill_children(self):
+    def destroy(self):
         for c in self.childrens_pull:
             c.terminate()
             c.join()

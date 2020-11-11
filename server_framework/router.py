@@ -10,6 +10,7 @@ class HandlerMethodInfo:
 class MethodNotAllowedException(Exception):
     def __init__(self, method):
         self.method = method
+
     def __str__(self):
         return f"Method {self.method} is not allowed"
 
@@ -26,6 +27,9 @@ class Router:
     # TODO TypedDict
     routes = dict()
 
+    def __init__(self, base_route: str = "/api"):
+        self.base_route = base_route
+
     def add_route(self, route: str, handler, methods: list):
         """
         Добавление нового роута
@@ -33,6 +37,7 @@ class Router:
         :param handler: Сам handler(Функция принимающая Request и возвразающая Response
         :return:
         """
+        route = self.base_route + route
         self.routes[route] = HandlerMethodInfo(handler=handler, methods=methods)
 
     async def navigate(self, request: Request):
@@ -42,10 +47,11 @@ class Router:
         :param request:
         :return:
         """
+        route = self.base_route + request.path
         try:
-            handler_methods_info = self.routes[request.path]
+            handler_methods_info = self.routes[route]
         except KeyError:
-            raise RouteIsNotExist(request.path)
+            raise RouteIsNotExist(route)
         if request.method not in handler_methods_info.methods:
             raise MethodNotAllowedException(request.method)
         return await handler_methods_info.handler(request)
