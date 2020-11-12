@@ -6,8 +6,8 @@ from time import mktime
 from typing import Any
 from wsgiref.handlers import format_date_time
 
-from server_framework.Exceptions import IncorrectJsonError
-from server_framework.answer_codes import HttpCode
+from keklik_framework.answer_codes import HttpCode
+from keklik_framework.exceptions import IncorrectJsonError
 
 ENCODING = "iso-8859-1"
 
@@ -66,7 +66,7 @@ class Request:
         self.body = body
 
     def __str__(self):
-        return f'Method: {self.method}\nPath: {self.path}\nVer: {self.version}\n\n'
+        return f'Method: {self.method} Path: {self.path}\n'
 
 
 class Response:
@@ -100,7 +100,7 @@ class Response:
 
 
 def get_error(status: HttpCode, message: str):
-    data = "{\n" + message + "\n}"
+    data = "{\n\"Error\":\"" + message + "\"\n}"
     ans = f"""HTTP/1.1 {status.code} {status.status}
             Content-Length: {len(data) - 1}
             Connection: close

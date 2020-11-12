@@ -1,5 +1,5 @@
-from server_framework.answer_codes import HTTP_OK, HttpCode
-from server_framework.parser import Response
+from keklik_framework.answer_codes import HTTP_OK, HttpCode
+from keklik_framework.parser import Response
 
 
 def get_ok_response(data: str):

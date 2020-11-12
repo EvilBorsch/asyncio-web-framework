@@ -1,13 +1,13 @@
-import asyncio
 import os
 import socket
 
+import asyncio
 import uvloop
 
-from server_framework.answer_codes import HTTP_INTERNAL_SERVER_ERROR
-from server_framework.logger import log
-from server_framework.parser import parse, ENCODING, get_error
-from server_framework.router import Router
+from keklik_framework.answer_codes import HTTP_INTERNAL_SERVER_ERROR
+from keklik_framework.logger import log
+from keklik_framework.parser import parse, ENCODING, get_error
+from keklik_framework.router import Router
 
 
 class HTTPServer:

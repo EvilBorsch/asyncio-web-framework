@@ -1,5 +1,5 @@
-from server_framework.Exceptions import RouteIsNotExist, MethodNotAllowedException
-from server_framework.parser import Request
+from keklik_framework.exceptions import RouteIsNotExist, MethodNotAllowedException
+from keklik_framework.parser import Request
 
 
 class HandlerMethodInfo:

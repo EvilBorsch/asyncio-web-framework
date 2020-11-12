@@ -1,9 +1,9 @@
 import schematics
 from schematics.exceptions import DataError
 
-from server_framework.answer_codes import HTTP_BAD_REQUEST
-from server_framework.parser import Request, Response
-from server_framework.router import Router
+from keklik_framework.answer_codes import HTTP_BAD_REQUEST
+from keklik_framework.parser import Request, Response
+from keklik_framework.router import Router
 from src.converter.exceptions import CurrencyIsNotAdded
 from src.converter.models.models import SetCurrencyModel, ConvertModel
 from src.converter.usecase.usecase import ConverterUsecase

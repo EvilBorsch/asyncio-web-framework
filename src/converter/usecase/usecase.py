@@ -9,7 +9,7 @@ class ConverterUsecase:
         if currency_from != currency_to:
             cur_from = await self.repository.get_currency_rate(currency_from)
             cur_to = await self.repository.get_currency_rate(currency_to)
-            converted_value = amount * (cur_from / cur_to)
+            converted_value = amount * cur_from / cur_to
         else:
             converted_value = amount
         return converted_value

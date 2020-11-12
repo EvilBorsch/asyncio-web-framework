@@ -3,8 +3,8 @@ import os
 import aioredis
 import asyncio
 
-from server_framework.router import Router
-from server_framework.server import HTTPServer
+from keklik_framework.router import Router
+from keklik_framework.server import HTTPServer
 from src.converter.delivery.delivery import ConverterHandler
 from src.converter.repository.repository import ConverterRepository
 from src.converter.usecase.usecase import ConverterUsecase
