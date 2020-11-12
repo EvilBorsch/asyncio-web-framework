@@ -1,6 +1,7 @@
-import asyncio
+import os
 
 import aioredis
+import asyncio
 
 from server_framework.router import Router
 from server_framework.server import HTTPServer
@@ -9,13 +10,14 @@ from src.converter.repository.repository import ConverterRepository
 from src.converter.usecase.usecase import ConverterUsecase
 
 
-async def connect_to_redis(url: str = ""):
+async def connect_to_redis(url: str):
     redis = await aioredis.create_redis_pool(url)
     return redis
 
 
 if __name__ == '__main__':
-    connection = asyncio.run(connect_to_redis('redis://localhost'))
+    redis_url = os.environ.get("REDIS_URL", "redis://localhost")
+    connection = asyncio.run(connect_to_redis(redis_url))
     router = Router()
 
     rep = ConverterRepository(connection)

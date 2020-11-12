@@ -7,7 +7,7 @@ from typing import Any
 from wsgiref.handlers import format_date_time
 
 from server_framework.Exceptions import IncorrectJsonError
-from server_framework.answer_codes import Http_code
+from server_framework.answer_codes import HttpCode
 
 ENCODING = "iso-8859-1"
 
@@ -71,7 +71,7 @@ class Request:
 
 class Response:
     # TODO strings to byte
-    def __init__(self, status: Http_code, data: Any, typ="json"):
+    def __init__(self, status: HttpCode, data: Any, typ="json"):
         self.status = status
         self.path = None
         self.data = data
@@ -99,7 +99,7 @@ class Response:
         return ans
 
 
-def get_error(status: Http_code, message: str):
+def get_error(status: HttpCode, message: str):
     data = "{\n" + message + "\n}"
     ans = f"""HTTP/1.1 {status.code} {status.status}
             Content-Length: {len(data) - 1}
