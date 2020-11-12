@@ -35,8 +35,8 @@ converted_value = amount * (cur_from / cur_to)
 
 #### <b>Сервиc задеплоен на http://165.227.162.244:8081 </b>
 Так что можно будет его потыкать там
-```GET http://165.227.162.244:8101/convert?from=USD&&to=EUR&&amount=4```
-```POST http://165.227.162.244:8101/database?merge=1```
+```GET http://165.227.162.244:8081/convert?from=USD&&to=EUR&&amount=4```
+```POST http://165.227.162.244:8081/database?merge=1```
 
 #### Примеры запросов на локалхосте
 
