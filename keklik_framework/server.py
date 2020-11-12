@@ -24,10 +24,12 @@ class HTTPServer:
     def run(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+        sock.setblocking(False)
         sock.bind((self.host, self.port))
         log.print.info(f"Server is running on {self.host}:{self.port}")
         sock.listen()
-        sock.setblocking(False)
+
         uvloop.install()
         self.worker.worker(sock)
 
