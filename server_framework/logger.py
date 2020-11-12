@@ -3,8 +3,7 @@ import logging
 
 class Logger:
     def __init__(self):
-        l = logging.getLogger('main')
-        # настраиваем логгинг
+        l = logging.getLogger("main")
         l.setLevel(logging.DEBUG)
         ch = logging.StreamHandler()
         ch.setLevel(logging.DEBUG)
@@ -14,7 +13,7 @@ class Logger:
         )
         ch.setFormatter(formatter)
         l.addHandler(ch)
-        l.info('Run')
+        l.info("Run")
         self.print = l
 
 

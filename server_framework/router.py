@@ -1,3 +1,4 @@
+from server_framework.Exceptions import RouteIsNotExist, MethodNotAllowedException
 from server_framework.parser import Request
 
 
@@ -5,22 +6,6 @@ class HandlerMethodInfo:
     def __init__(self, handler, methods: list):
         self.handler = handler
         self.methods = methods
-
-
-class MethodNotAllowedException(Exception):
-    def __init__(self, method):
-        self.method = method
-
-    def __str__(self):
-        return f"Method {self.method} is not allowed"
-
-
-class RouteIsNotExist(Exception):
-    def __init__(self, route):
-        self.route = route
-
-    def __str__(self):
-        return f"Route {self.route} is not exist"
 
 
 class Router:

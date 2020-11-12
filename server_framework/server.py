@@ -1,6 +1,4 @@
 import asyncio
-import atexit
-import multiprocessing as mp
 import os
 import socket
 
@@ -21,46 +19,24 @@ class HTTPServer:
         self.workers_count = workers_count
 
         self.router = router
-        self.worker = Worker(router)  # this need to bind worker to process
-        self.worker.router.routes = router.routes
-
-        atexit.register(self.destroy)
+        self.worker = Worker(router)
 
     def run(self):
-
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock.bind((self.host, self.port))
-        log.print.info(f'Server is running on {self.host}:{self.port}')
+        log.print.info(f"Server is running on {self.host}:{self.port}")
         sock.listen()
         sock.setblocking(False)
-
         uvloop.install()
-
-        for i in range(self.workers_count):
-            self.prefork(sock)
-
-        try:
-            for worker in self.childrens_pull:
-                worker.join()
-        except KeyboardInterrupt:
-            for worker in self.childrens_pull:
-                worker.terminate()
-            sock.close()
-            log.print.info('Server was manually stopped')
-
-    def prefork(self, parent_sock: socket.socket):
-        p = mp.Process(target=self.worker.worker, args=(parent_sock,))
-        p.start()
-        self.childrens_pull.append(p)
-
-    def destroy(self):
-        for c in self.childrens_pull:
-            c.terminate()
-            c.join()
+        self.worker.worker(sock)
 
 
 class Worker:
+    """
+    Класс, работющий с непосредственно реквестами, необходим для дальнейшей модификации HTTPServer
+    """
+
     def __init__(self, router: Router):
         self.router = router
 
@@ -75,9 +51,13 @@ class Worker:
 
     async def handle(self, sock: socket.socket):
         raw = await asyncio.get_event_loop().sock_recv(sock, 1024)
-        request = parse(raw)
+        try:
+            request = parse(raw)
+        except Exception as e:
+            log.print.error("Bad request with error" + str(e))
+            return
         if request is None:
-            log.print.info('Served empty request')
+            log.print.info("Served empty request")
             return
         log.print.info(request)
         try:
