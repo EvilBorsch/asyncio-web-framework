@@ -12,7 +12,7 @@ class Router:
     # TODO TypedDict
     routes = dict()
 
-    def __init__(self, base_route: str = "/api"):
+    def __init__(self, base_route: str = ""):
         self.base_route = base_route
 
     def add_route(self, route: str, handler, methods: list):
@@ -32,7 +32,7 @@ class Router:
         :param request:
         :return:
         """
-        route = self.base_route + request.path
+        route = request.path
         try:
             handler_methods_info = self.routes[route]
         except KeyError:
