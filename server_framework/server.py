@@ -54,7 +54,7 @@ class Worker:
         try:
             request = parse(raw)
         except Exception as e:
-            log.print.error("Bad request with error" + str(e))
+            log.print.error("Bad request with error: " + str(e))
             return
         if request is None:
             log.print.info("Served empty request")

@@ -1,11 +1,11 @@
 from schematics import Model
-from schematics.types import StringType, IntType, FloatType
+from schematics.types import StringType, FloatType
 
 
 class ConvertModel(Model):
     currency_from = StringType(required=True)
     currency_to = StringType(required=True, default="USD")
-    amount = IntType(required=True)
+    amount = FloatType(required=True)
 
 
 class SetCurrencyModel(Model):

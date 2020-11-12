@@ -17,6 +17,6 @@ class ConverterUsecase:
     async def add_currencys(self, currency_name: str, currency_rate: float, merge: bool) -> str:
         await self.repository.set_currency_rate(currency_name, currency_rate, merge)
         if merge:
-            return f"New value of {currency_name} now {currency_rate}"
+            return f"Add new value of {currency_name} -> {currency_rate}"
         else:
             return f"Old values is deleted"

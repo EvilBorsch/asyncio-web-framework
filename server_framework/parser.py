@@ -25,7 +25,12 @@ def get_params(url: str) -> (str, dict):
     :return:
     """
     ans = dict()
-    path, params = url.split("?")
+    splited = url.split("?")
+    path = splited[0]
+    try:
+        params = splited[1]
+    except IndexError:
+        return path, dict()
     params = params.split("&")
     for param in params:
         key, value = param.split("=")
